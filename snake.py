@@ -127,21 +127,25 @@ def gameloop():
     snake_canvas.delete("all")
     snake_canvas.create_rectangle(0, 0, win_x, win_y, fill="#222222", outline="white", width=5)
 
+    # oblicz następną pozycję głów (bez poruszania)
+    next_snake = [snake_coords[0] + snake_move_dir[0], snake_coords[1] + snake_move_dir[1]]
+    next_snake2 = [snake2_coords[0] + snake2_move_dir[0], snake2_coords[1] + snake2_move_dir[1]]
+
+    # kolizja ze ścianą – oba węże
+    for nx, ny in (next_snake, next_snake2):
+        if nx < 0 or nx >= game_dimensions[0] or ny < 0 or ny >= game_dimensions[1]:
+            show_game_over()
+            return
+
     # dodanie głowy węża 1
     snake_tail.append([snake_coords[0], snake_coords[1]])
-    snake_coords[0] += snake_move_dir[0]
-    snake_coords[1] += snake_move_dir[1]    
+    snake_coords[0] = next_snake[0]
+    snake_coords[1] = next_snake[1]
 
     # dodanie głowy węża 2
     snake2_tail.append([snake2_coords[0], snake2_coords[1]])
-    snake2_coords[0] += snake2_move_dir[0]
-    snake2_coords[1] += snake2_move_dir[1]
-
-    # kolizja ze ścianą – oba węże
-    for x, y in (snake_coords, snake2_coords):
-        if x < 0 or x >= game_dimensions[0] or y < 0 or y >= game_dimensions[1]:
-            show_game_over()
-            return
+    snake2_coords[0] = next_snake2[0]
+    snake2_coords[1] = next_snake2[1]
 
 
     snake_moved_in_this_frame = False
